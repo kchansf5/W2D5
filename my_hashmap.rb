@@ -32,8 +32,31 @@ class MaxIntSet
   end
 end
 
+class IntSet
 
+  attr_reader :store
 
+  def initialize
+    @store = Array.new(20) {[]}
+  end
+
+  def insert(el)
+    bucket = el % 20
+    @store[bucket] << el
+  end
+
+  def remove(el)
+
+  end
+
+  def include?(el)
+    self[el].include?(el)
+  end
+
+  def [](el)
+    @store[el % 20]
+  end
+end
 
 
 
@@ -48,6 +71,9 @@ end
 
 if __FILE__ == $0
 
-
-
+b = IntSet.new
+ b.insert(42)
+# p b.store
+p b.include?(42)
+#
 end
