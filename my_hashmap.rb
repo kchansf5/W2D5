@@ -42,7 +42,15 @@ class IntSet
   end
 
   def remove(el)
-
+    if self.include?(el)
+      self[el].each_with_index do |bucket_els, idx|
+        if bucket_els == el
+          return self[el][idx] = nil
+        end
+      end
+    else
+      raise "cannot remove el because it does not exist"
+    end
   end
 
   def include?(el)
@@ -64,7 +72,6 @@ class ResizingIntSet
   end
 
   def insert(el)
-    # debugger
     if @store.length == @insert_count
       @new_store = Array.new(@store.length * 2) {[]}
       new_length = @new_store.length
@@ -84,20 +91,27 @@ class ResizingIntSet
       @store[bucket] << el
       @insert_count += 1
     end
-
   end
-
 
   def remove(el)
+    if @store.include?(el)
+      @store[el].each_with_index do |bucket_els,idx|
+        if @store[el][idx] == el
+          @store[el][idx] = nil
+        end
+      end
+    else
+      raise "Cannot remove el cause it doesn't exist :()"
+    end
   end
 
-  def include?()
+  def include?(el)
+    self[el].include?(el)
   end
 
   def [](el)
     @store[el % @store.length]
   end
-
 
 end
 
@@ -111,20 +125,13 @@ end
 
 
 
-if __FILE__ == $0
 
-b = ResizingIntSet.new
- # b.insert()
-# p b.store
-# p b.include?(42)
- b.insert(1)
- b.insert(2)
- b.insert(4)
- b.insert(5)
- b.insert(65)
- b.insert(522)
- b.insert(59)
- b.insert(56)
- # b.insert(51)
-p b.store
+
+if __FILE__ == $0
+  b = ResizingIntSet.new
+  b.insert(1)
+  p b.store
+  p b.remove(1)
+  p b.store
+  # p self
 end
